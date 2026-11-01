@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>덩스 관람객 설문</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eaf6f4;
+    --bg-pattern:#d9efec;
+    --surface:#ffffff;
+    --surface-2:#f4fbfa;
+    --ink:#16323b;
+    --ink-muted:#5c7b82;
+    --border:#c9e6e1;
+    --sky:#4fb9de;
+    --sky-deep:#2f96bb;
+    --pink:#e8508f;
+    --yellow:#ffbb3d;
+    --sky-soft:rgba(79,185,222,0.14);
+    --pink-soft:rgba(232,80,143,0.12);
+    --radius:20px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 12% 8%, var(--bg-pattern) 0, transparent 40%),
+      radial-gradient(circle at 90% 15%, var(--bg-pattern) 0, transparent 35%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:48px;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  .wrap{max-width:460px;margin:0 auto;padding:0 18px;}
+  .jua{font-family:'Jua', 'Noto Sans KR', sans-serif;}
+
+  /* ---------- Hero / cover ---------- */
+  .hero{
+    position:relative;
+    padding:22px 18px 0;
+    text-align:center;
+  }
+  .hero-badge{
+    display:inline-block;
+    font-size:12px;
+    letter-spacing:.08em;
+    color:var(--sky-deep);
+    background:var(--sky-soft);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:5px 14px;
+    margin-bottom:12px;
+  }
+  .hero-img{
+    width:100%;
+    max-width:280px;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    border-radius:24px;
+    border:1px solid var(--border);
+    box-shadow:0 16px 34px -18px rgba(22,50,59,.35);
+    margin:0 auto 14px;
+    display:block;
+  }
+  .hero h1{
+    font-family:'Jua', sans-serif;
+    font-size:26px;
+    line-height:1.4;
+    margin:0 0 6px;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  .hero p{
+    font-size:14.5px;
+    color:var(--ink-muted);
+    margin:0 0 20px;
+    line-height:1.6;
+  }
+
+  /* ---------- Marquee ---------- */
+  .marquee-shell{
+    width:100%;
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    margin-bottom:8px;
+  }
+  .marquee-track{
+    display:flex;
+    gap:14px;
+    width:max-content;
+    animation:scroll-left 26s linear infinite;
+    padding:4px 0 10px;
+  }
+  .marquee-shell:hover .marquee-track{animation-play-state:paused;}
+  @keyframes scroll-left{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  .piece{
+    flex:0 0 auto;
+    width:118px;
+    text-align:center;
+  }
+  .piece img{
+    width:118px;
+    height:118px;
+    object-fit:cover;
+    border-radius:16px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    display:block;
+    box-shadow:0 8px 18px -12px rgba(22,50,59,.3);
+  }
+  .piece span{
+    display:block;
+    margin-top:7px;
+    font-size:12.5px;
+    color:var(--ink-muted);
+    font-weight:500;
+  }
+  .scrolldown{
+    text-align:center;
+    font-size:13px;
+    color:var(--ink-muted);
+    margin:6px 0 28px;
+  }
+  .scrolldown b{color:var(--pink);}
+
+  /* ---------- Question blocks ---------- */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    margin-bottom:16px;
+  }
+  .q-eyebrow{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.06em;
+    color:var(--sky-deep);
+    margin-bottom:6px;
+  }
+  .q-title{
+    font-family:'Jua', sans-serif;
+    font-size:18px;
+    line-height:1.45;
+    margin:0 0 4px;
+    text-wrap:balance;
+  }
+  .q-sub{
+    font-size:13px;
+    color:var(--ink-muted);
+    margin:0 0 16px;
+    line-height:1.5;
+  }
+  .required-dot{color:var(--pink);}
+
+  /* ---------- Quadrant ---------- */
+  .quad-wrap{
+    display:grid;
+    grid-template-columns:34px 1fr;
+    grid-template-rows:auto 1fr 34px;
+    gap:6px;
+    max-width:340px;
+    margin:10px auto 4px;
+  }
+  .axis-label{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink-muted);
+    text-align:center;
+    line-height:1.3;
+  }
+  .axis-top{grid-column:2;grid-row:1;padding-bottom:2px;}
+  .axis-bottom{grid-column:2;grid-row:3;padding-top:2px;}
+  .axis-left{grid-column:1;grid-row:2;writing-mode:vertical-rl;transform:rotate(180deg);}
+  .axis-right{grid-column:1;grid-row:2;display:none;}
+  .quad{
+    grid-column:2;grid-row:2;
+    position:relative;
+    aspect-ratio:1/1;
+    background:var(--surface-2);
+    border:1.5px solid var(--border);
+    border-radius:16px;
+    touch-action:none;
+    overflow:hidden;
+  }
+  .quad::before,.quad::after{
+    content:"";
+    position:absolute;
+    background:var(--border);
+  }
+  .quad::before{left:0;right:0;top:50%;height:1px;}
+  .quad::after{top:0;bottom:0;left:50%;width:1px;}
+  .quad-tag{
+    position:absolute;
+    font-size:10px;
+    color:var(--ink-muted);
+    opacity:.55;
+    font-weight:500;
+    letter-spacing:.02em;
+  }
+  .quad-tag.tl{top:8px;left:10px;}
+  .quad-tag.tr{top:8px;right:10px;text-align:right;}
+  .quad-tag.bl{bottom:8px;left:10px;}
+  .quad-tag.br{bottom:8px;right:10px;text-align:right;}
+  .quad-marker{
+    position:absolute;
+    width:22px;height:22px;
+    border-radius:50%;
+    background:var(--pink);
+    border:3px solid var(--surface);
+    box-shadow:0 4px 10px -3px rgba(232,80,143,.6);
+    transform:translate(-50%,-50%);
+    display:none;
+    pointer-events:none;
+  }
+  .quad-right-label{
+    grid-column:2;grid-row:2;
+    align-self:center;
+    justify-self:end;
+    display:none;
+  }
+  .axis-right-text{
+    position:absolute;
+    right:-4px;
+    top:50%;
+    transform:translate(100%,-50%) rotate(0deg);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink-muted);
+    width:30px;
+    text-align:left;
+    line-height:1.3;
+  }
+  .axis-left-text{
+    position:absolute;
+    left:-4px;
+    top:50%;
+    transform:translate(-100%,-50%);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink-muted);
+    width:30px;
+    text-align:right;
+    line-height:1.3;
+  }
+  .quad-outer{position:relative;grid-column:2;grid-row:2;}
+
+  /* ---------- Choice cards (goods) ---------- */
+  .goods-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .goods-item{
+    border:1.5px solid var(--border);
+    background:var(--surface-2);
+    border-radius:14px;
+    padding:14px 10px;
+    text-align:center;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    transition:border-color .15s, background .15s, transform .1s;
+    user-select:none;
+  }
+  .goods-item:active{transform:scale(.97);}
+  .goods-item.sel{
+    border-color:var(--sky-deep);
+    background:var(--sky-soft);
+    color:var(--sky-deep);
+    font-weight:700;
+  }
+
+  /* ---------- scale (intent) ---------- */
+  .scale-row{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    margin-top:6px;
+  }
+  .scale-btn{
+    flex:1;
+    aspect-ratio:1/1;
+    border-radius:50%;
+    border:1.5px solid var(--border);
+    background:var(--surface-2);
+    font-family:'Noto Sans KR';
+    font-weight:700;
+    font-size:15px;
+    color:var(--ink-muted);
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .scale-btn.sel{
+    border-color:var(--pink);
+    background:var(--pink-soft);
+    color:var(--pink);
+  }
+  .scale-caption{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:var(--ink-muted);
+    margin-top:8px;
+  }
+
+  /* ---------- radio list (price) ---------- */
+  .radio-list{display:flex;flex-direction:column;gap:8px;}
+  .radio-item{
+    border:1.5px solid var(--border);
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:13px 16px;
+    font-size:14.5px;
+    font-weight:500;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    user-select:none;
+  }
+  .radio-item .dot{
+    width:16px;height:16px;
+    border-radius:50%;
+    border:1.5px solid var(--border);
+    flex:0 0 auto;
+    position:relative;
+  }
+  .radio-item.sel{border-color:var(--sky-deep);background:var(--sky-soft);}
+  .radio-item.sel .dot{border-color:var(--sky-deep);}
+  .radio-item.sel .dot::after{
+    content:"";
+    position:absolute;inset:3px;
+    border-radius:50%;
+    background:var(--sky-deep);
+  }
+
+  /* ---------- text inputs ---------- */
+  .opt-tag{
+    display:inline-block;
+    font-size:11px;
+    color:var(--ink-muted);
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:2px 10px;
+    margin-bottom:10px;
+  }
+  .text-field{
+    width:100%;
+    border:1.5px solid var(--border);
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:13px 14px;
+    font-size:14.5px;
+    font-family:'Noto Sans KR';
+    color:var(--ink);
+    margin-bottom:12px;
+  }
+  .text-field:last-child{margin-bottom:0;}
+  .text-field::placeholder{color:#9db4ba;}
+
+  .extra-section-label{
+    text-align:center;
+    font-size:13px;
+    color:var(--ink-muted);
+    margin:8px 0 14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .extra-section-label::before,.extra-section-label::after{
+    content:"";flex:1;height:1px;background:var(--border);
+  }
+
+  /* ---------- submit ---------- */
+  .submit-btn{
+    width:100%;
+    border:none;
+    border-radius:16px;
+    padding:17px;
+    font-family:'Jua', sans-serif;
+    font-size:17px;
+    color:#fff;
+    background:linear-gradient(135deg, var(--pink), #f0709f);
+    box-shadow:0 14px 26px -14px rgba(232,80,143,.7);
+    cursor:pointer;
+    margin-top:4px;
+  }
+  .submit-btn:disabled{
+    opacity:.45;
+    box-shadow:none;
+    cursor:not-allowed;
+  }
+  .submit-note{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-muted);
+    margin-top:10px;
+    line-height:1.5;
+  }
+
+  footer{
+    text-align:center;
+    margin-top:30px;
+    font-size:11.5px;
+    color:var(--ink-muted);
+  }
+  footer .wordmark{font-family:'Jua';font-size:14px;color:var(--sky-deep);}
+
+  /* ---------- thank you overlay ---------- */
+  #thanks{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:var(--bg);
+    z-index:50;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  #thanks.show{display:flex;}
+  .thanks-card{
+    text-align:center;
+    max-width:340px;
+  }
+  .thanks-card img{
+    width:120px;height:120px;
+    object-fit:cover;
+    border-radius:20px;
+    border:1px solid var(--border);
+    box-shadow:0 16px 30px -16px rgba(22,50,59,.35);
+    margin-bottom:18px;
+  }
+  .thanks-card h2{
+    font-family:'Jua';
+    font-size:22px;
+    margin:0 0 10px;
+  }
+  .thanks-card p{
+    font-size:14px;
+    color:var(--ink-muted);
+    line-height:1.65;
+    margin:0;
+  }
+
+  @media (max-width:380px){
+    .hero h1{font-size:23px;}
+    .quad-wrap{max-width:300px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="hero-badge jua" style="font-family:'Noto Sans KR';font-weight:700;">DUNGS 관람객 설문</span>
+    <img class="hero-img" src="images/cover.jpg" alt="덩스">
+    <h1>오늘 만난 덩스, 기억나세요?</h1>
+    <p>전시에서 스쳐간 덩스들이에요.<br>가볍게 훑어보고 아래 설문으로 넘어가주세요 — 1분이면 충분해요.</p>
+  </div>
+
+  <div class="marquee-shell">
+    <div class="marquee-track" id="marqueeTrack">
+      <!-- set x2 for seamless loop, filled by JS -->
+    </div>
+  </div>
+  <div class="scrolldown">아래로 내려서 <b>설문 시작하기</b> ↓</div>
+
+  <form id="dungsForm">
+
+    <!-- Q1 : quadrant -->
+    <div class="card">
+      <div class="q-eyebrow">Q1 · 필수</div>
+      <p class="q-title">덩스는 당신에게 어떤 느낌인가요?</p>
+      <p class="q-sub">아래 네모 안에서, 느낌에 가장 가까운 위치를 한 번 눌러주세요.</p>
+
+      <div class="quad-wrap">
+        <div class="axis-label axis-top">사랑스러운</div>
+        <div class="quad-outer">
+          <div class="quad" id="quad">
+            <span class="quad-tag tl">포근한 힐링</span>
+            <span class="quad-tag tr">사랑스러운 장난꾸러기</span>
+            <span class="quad-tag bl">무드 있는 힐링</span>
+            <span class="quad-tag br">위트 있는 트렌디</span>
+            <div class="quad-marker" id="quadMarker"></div>
+          </div>
+          <div class="axis-left-text">자유<br>로운</div>
+          <div class="axis-right-text">차분<br>한</div>
+        </div>
+        <div class="axis-label axis-bottom">세련된</div>
+      </div>
+    </div>
+
+    <!-- Q2 : goods -->
+    <div class="card">
+      <div class="q-eyebrow">Q2 · 필수</div>
+      <p class="q-title">가장 만나보고 싶은 덩스 굿즈는?</p>
+      <p class="q-sub">딱 하나만 골라주세요.</p>
+      <div class="goods-grid" id="goodsGrid">
+        <div class="goods-item" data-val="아트토이">아트토이</div>
+        <div class="goods-item" data-val="봉제류">봉제류</div>
+        <div class="goods-item" data-val="생활소품">생활소품</div>
+        <div class="goods-item" data-val="문구류">문구류</div>
+        <div class="goods-item" data-val="보드게임">보드게임</div>
+        <div class="goods-item" data-val="물놀이용품">물놀이용품</div>
+      </div>
+    </div>
+
+    <!-- Q3 : purchase intent -->
+    <div class="card">
+      <div class="q-eyebrow">Q3 · 필수</div>
+      <p class="q-title">덩스 굿즈, 실제로 구매할 의향이 있나요?</p>
+      <div class="scale-row" id="intentRow">
+        <div class="scale-btn" data-val="1">1</div>
+        <div class="scale-btn" data-val="2">2</div>
+        <div class="scale-btn" data-val="3">3</div>
+        <div class="scale-btn" data-val="4">4</div>
+        <div class="scale-btn" data-val="5">5</div>
+      </div>
+      <div class="scale-caption"><span>전혀 없다</span><span>매우 있다</span></div>
+    </div>
+
+    <!-- Q4 : price -->
+    <div class="card">
+      <div class="q-eyebrow">Q4 · 필수</div>
+      <p class="q-title">그렇다면 적정한 가격대는?</p>
+      <div class="radio-list" id="priceList">
+        <div class="radio-item" data-val="1만원 미만"><span class="dot"></span>1만원 미만</div>
+        <div class="radio-item" data-val="1~3만원"><span class="dot"></span>1~3만원</div>
+        <div class="radio-item" data-val="3~5만원"><span class="dot"></span>3~5만원</div>
+        <div class="radio-item" data-val="5~10만원"><span class="dot"></span>5~10만원</div>
+        <div class="radio-item" data-val="10만원 이상"><span class="dot"></span>10만원 이상</div>
+      </div>
+    </div>
+
+    <div class="extra-section-label">여기부터는 선택 질문이에요</div>
+
+    <!-- Q5/Q6 -->
+    <div class="card">
+      <div class="q-eyebrow">Q5 · 선택</div>
+      <p class="q-title">떠오르는 캐릭터나 브랜드가 있다면?</p>
+      <span class="opt-tag">이름만 편하게 적어주세요</span>
+      <input type="text" class="text-field" id="q5" placeholder="예: 카카오프렌즈, 마시마로 등">
+
+      <div class="q-eyebrow" style="margin-top:6px;">Q6 · 선택</div>
+      <p class="q-title">그 캐릭터와 비교했을 때, 덩스만의 매력은?</p>
+      <span class="opt-tag">한 단어여도 좋아요</span>
+      <input type="text" class="text-field" id="q6" placeholder="예: 더 엉뚱해요, 더 위로가 돼요">
+    </div>
+
+    <!-- Q7/Q8 -->
+    <div class="card">
+      <div class="q-eyebrow">Q7 · 선택</div>
+      <p class="q-title">덩스와 협업하면 잘 어울릴 것 같은 브랜드나 업종은?</p>
+      <span class="opt-tag">생각나는 대로 편하게</span>
+      <input type="text" class="text-field" id="q7" placeholder="예: 카페, 문구 브랜드, 수영장">
+
+      <div class="q-eyebrow" style="margin-top:6px;">Q8 · 선택</div>
+      <p class="q-title">덩스를 어디서 다시 만나고 싶으세요?</p>
+      <span class="opt-tag">장소든 채널이든 좋아요</span>
+      <input type="text" class="text-field" id="q8" placeholder="예: 인스타그램, 팝업스토어, 편집숍">
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn" disabled>덩스에게 마음 전하기</button>
+    <p class="submit-note">Q1~Q4를 채우면 제출할 수 있어요.<br>응답은 오직 전시 소개서를 만드는 데에만 사용돼요.</p>
+  </form>
+
+  <footer>
+    <div class="wordmark">DUNGS × 토이버스</div>
+    toybirth@gmail.com
+  </footer>
+</div>
+
+<div id="thanks">
+  <div class="thanks-card">
+    <img src="images/dungs-bubble.jpg" alt="덩스">
+    <h2 class="jua">고마워요!</h2>
+    <p>당신의 한마디가 덩스를 한 뼘 더<br>자라게 해줄 거예요.<br>전시, 즐겁게 즐기다 가세요 🩵</p>
+  </div>
+</div>
+
+<!-- hidden iframe target so the Google Form POST doesn't navigate this page away -->
+<iframe name="hiddenFormTarget" style="display:none" id="hiddenFormTarget"></iframe>
+
+<script>
+  /* ================================================================
+     0) 결과 저장 설정 — 구글 폼 연결
+     -----------------------------------------------------------------
+     실제 구글 폼의 entry ID로 연결되어 있어요. 폼의 질문을 바꾸거나
+     새로 만들 경우, 아래 값들을 새 "미리 채워진 링크"의 entry.XXXXXXXX
+     코드로 다시 교체해주세요.
+  ================================================================= */
+  const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLScpVwA-o1kQPZ7eEsfLSI6BDicaWh3BU9nktcyxhFpYLtfAlA/formResponse";
+  const ENTRIES = {
+    x:          "entry.139019973",
+    y:          "entry.379961",
+    goods:      "entry.658282354",
+    intent:     "entry.1255335845",
+    price:      "entry.476984161",
+    competitor: "entry.1914453073",
+    diff:       "entry.2040505218",
+    collab:     "entry.528666435",
+    channel:    "entry.1770186864",
+  };
+  const READY = !FORM_ACTION.startsWith("REPLACE");
+
+  /* ---------------- marquee ---------------- */
+  const pieces = [
+    {src:"images/dungs-angel.jpg", name:"덩스엔젤"},
+    {src:"images/dungs-acidmelon.jpg", name:"애시드멜론"},
+    {src:"images/dungs-goldcoast.jpg", name:"골드코스트"},
+    {src:"images/dungs-bubble.jpg", name:"버블덩스"},
+    {src:"images/dungs-imfine.jpg", name:"아임파인"},
+  ];
+  const track = document.getElementById("marqueeTrack");
+  function renderPieces(){
+    return pieces.map(p => `<div class="piece"><img src="${p.src}" alt="${p.name}" loading="lazy"><span>${p.name}</span></div>`).join("");
+  }
+  track.innerHTML = renderPieces() + renderPieces(); // duplicate for seamless loop
+
+  /* ---------------- Q1 quadrant ---------------- */
+  const quad = document.getElementById("quad");
+  const marker = document.getElementById("quadMarker");
+  let qx = null, qy = null;
+
+  function setQuadPoint(clientX, clientY){
+    const rect = quad.getBoundingClientRect();
+    let relX = (clientX - rect.left) / rect.width;
+    let relY = (clientY - rect.top) / rect.height;
+    relX = Math.min(1, Math.max(0, relX));
+    relY = Math.min(1, Math.max(0, relY));
+    marker.style.left = (relX*100) + "%";
+    marker.style.top = (relY*100) + "%";
+    marker.style.display = "block";
+    // 구글 폼의 '선형 배율' 문항은 1~10 정수만 받아요 (소수점이 있으면 응답이 저장되지 않아요)
+    // x: left(0)=자유로운(1) -> right(1)=차분한(10)
+    qx = Math.round(1 + relX*9);
+    // y: top(0)=사랑스러운(1) -> bottom(1)=세련된(10)  ※ 구글 폼 문항의 양끝 라벨(1=사랑스러운, 10=세련된)과 같은 방향
+    qy = Math.round(1 + relY*9);
+    updateSubmitState();
+  }
+  function pointFromEvent(e){
+    if (e.touches && e.touches[0]) return {x:e.touches[0].clientX, y:e.touches[0].clientY};
+    return {x:e.clientX, y:e.clientY};
+  }
+  quad.addEventListener("pointerdown", e => { const p=pointFromEvent(e); setQuadPoint(p.x,p.y); });
+  quad.addEventListener("pointermove", e => { if(e.buttons===1 || e.pressure>0){ const p=pointFromEvent(e); setQuadPoint(p.x,p.y);} });
+
+  /* ---------------- Q2 goods (single select) ---------------- */
+  let goodsVal = null;
+  document.querySelectorAll("#goodsGrid .goods-item").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      document.querySelectorAll("#goodsGrid .goods-item").forEach(x=>x.classList.remove("sel"));
+      el.classList.add("sel");
+      goodsVal = el.dataset.val;
+      updateSubmitState();
+    });
+  });
+
+  /* ---------------- Q3 intent scale ---------------- */
+  let intentVal = null;
+  document.querySelectorAll("#intentRow .scale-btn").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      document.querySelectorAll("#intentRow .scale-btn").forEach(x=>x.classList.remove("sel"));
+      el.classList.add("sel");
+      intentVal = el.dataset.val;
+      updateSubmitState();
+    });
+  });
+
+  /* ---------------- Q4 price ---------------- */
+  let priceVal = null;
+  document.querySelectorAll("#priceList .radio-item").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      document.querySelectorAll("#priceList .radio-item").forEach(x=>x.classList.remove("sel"));
+      el.classList.add("sel");
+      priceVal = el.dataset.val;
+      updateSubmitState();
+    });
+  });
+
+  /* ---------------- submit gating ---------------- */
+  const submitBtn = document.getElementById("submitBtn");
+  function updateSubmitState(){
+    const ok = qx!==null && qy!==null && goodsVal && intentVal && priceVal;
+    submitBtn.disabled = !ok;
+  }
+
+  /* ---------------- submit handling ---------------- */
+  document.getElementById("dungsForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    if (submitBtn.disabled) return;
+
+    const payload = {
+      x: qx, y: qy, goods: goodsVal, intent: intentVal, price: priceVal,
+      competitor: document.getElementById("q5").value,
+      diff: document.getElementById("q6").value,
+      collab: document.getElementById("q7").value,
+      channel: document.getElementById("q8").value,
+    };
+
+    if (!READY){
+      console.log("[덩스 설문 - 미리보기 모드] 아직 구글 폼이 연결되지 않았어요. 응답:", payload);
+      showThanks();
+      return;
+    }
+
+    // 실제 제출: 숨겨진 iframe으로 구글 폼에 POST (페이지 이동 없음)
+    const f = document.createElement("form");
+    f.action = FORM_ACTION;
+    f.method = "POST";
+    f.target = "hiddenFormTarget";
+    Object.keys(ENTRIES).forEach(key=>{
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = ENTRIES[key];
+      input.value = payload[key] ?? "";
+      f.appendChild(input);
+    });
+    document.body.appendChild(f);
+    f.submit();
+    setTimeout(()=>f.remove(), 500);
+    showThanks();
+  });
+
+  function showThanks(){
+    document.getElementById("thanks").classList.add("show");
+    window.scrollTo({top:0, behavior:"instant"});
+  }
+</script>
+</body>
+</html>
